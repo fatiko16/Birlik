@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures= ["referentialIntegrity"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  referentialIntegrity = "prisma"
+}
+
+
+model UserStory {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Description String  @db.VarChar(2000)
+  Title      String  @db.VarChar(500) @default("Some User Story")
+  Requirements Requirement[]
+}
+
+
+model Requirement {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  RequirementType RequirementType @default(Business) 
+  Description String  @db.VarChar(2000)
+  // RequirementNumber String  @db.VarChar(500) @default("1.1") think about it draw it out
+  UserStory UserStory[]
+}
+
+
+
+enum RequirementType {
+  Business
+  Functional
+}
